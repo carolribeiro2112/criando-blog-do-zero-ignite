@@ -6,7 +6,7 @@
 
 :root {
   --gray-500: rgba(40,44,52,0.83);
-  --gray-900:  #1A1D23;
+  --background:  #1A1D23;
   --heading: #F8F8F8;
   --body: #D7D7D7;
   --info: #BBBBBB;
@@ -27,7 +27,7 @@
 }
 
 body {
-  background-color: var(--gray-900);
+  background-color: var(--background);
   color: var(--body);
 }
 
