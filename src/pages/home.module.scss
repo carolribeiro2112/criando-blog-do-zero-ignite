@@ -1,5 +1,6 @@
 .posts {
   max-width: 700px;
+  margin-bottom: 4rem;
 
   a {
     display: block;
@@ -43,7 +44,7 @@
 }
 
 .loadingButton {
-  margin-top: 4rem;
+  margin-bottom: 2rem;
   color: var(--highlight);
   background: transparent;
   border: none;
