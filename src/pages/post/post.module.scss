@@ -1,1 +1,56 @@
-// TODO
+.postBanner {
+  width: 100%;
+}
+
+
+.postHeader {
+  margin-top: 5rem;
+
+  h1 {
+    margin-bottom: 1.5rem;
+
+    font-size: 3rem;
+    line-height: 3.625rem;
+  }
+
+  ul {
+    display: flex;
+    justify-content: left;
+    list-style-type: none;
+
+    li {
+      display:flex;
+      align-items: center;
+      margin-right: 1.5rem;
+
+      svg{
+        font-size: 1rem;
+        margin-right: 0.25rem;
+      }
+
+      span {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+.postArticle {
+  margin: 4rem auto;
+
+  section {
+    h2 {
+      margin-top: 4rem ;
+      margin-bottom: 2.5rem;
+      font-size: 2.25rem;
+      line-height: 3.125rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+      line-height: 30px;
+      text-align: justify;
+    }
+  }
+
+}

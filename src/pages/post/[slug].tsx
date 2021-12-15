@@ -33,9 +33,9 @@ interface PostProps {
 export default function Post() {
   return (
     <>
-      <img src="/banner.png" alt="banner" />
+      <img src="/banner.png" alt="banner" className={styles.postBanner} />
       <main className={commonStyles.container}>
-        <div>
+        <div className={styles.postHeader}>
           <h1>Criando um app CRA do zero</h1>
           <ul>
             <li>
@@ -48,51 +48,50 @@ export default function Post() {
             </li>
             <li>
               <FiClock size={15} />
-              <span>4 minutos</span>
+              <span>4 min</span>
             </li>
           </ul>
-
-          <article>
-            <section>
-              <h2>Proin et varius</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Deleniti, nihil doloribus inventore aperiam veniam voluptatibus
-                eligendi necessitatibus porro nobis libero quae non? Obcaecati,
-                eum laboriosam quod rerum illo vel doloribus.
-              </p>
-            </section>
-
-            <section>
-              <h2>Cras laoreet mi</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Deleniti, nihil doloribus inventore aperiam veniam voluptatibus
-                eligendi necessitatibus porro nobis libero quae non? Obcaecati,
-                eum laboriosam quod rerum illo vel doloribus. Lorem ipsum dolor
-                sit amet consectetur adipisicing elit. Deleniti, nihil doloribus
-                inventore aperiam veniam voluptatibus eligendi necessitatibus
-                porro nobis libero quae non? Obcaecati, eum laboriosam quod
-                rerum illo vel doloribus. Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Deleniti, nihil doloribus inventore aperiam
-                veniam voluptatibus eligendi necessitatibus porro nobis libero
-                quae non? Obcaecati, eum laboriosam quod rerum illo vel
-                doloribus. Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Deleniti, nihil doloribus inventore aperiam veniam
-                voluptatibus eligendi necessitatibus porro nobis libero quae
-                non? Obcaecati, eum laboriosam quod rerum illo vel doloribus.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Deleniti, nihil doloribus inventore aperiam veniam voluptatibus
-                eligendi necessitatibus porro nobis libero quae non? Obcaecati,
-                eum laboriosam quod rerum illo vel doloribus. Lorem ipsum dolor
-                sit amet consectetur adipisicing elit. Deleniti, nihil doloribus
-                inventore aperiam veniam voluptatibus eligendi necessitatibus
-                porro nobis libero quae non? Obcaecati, eum laboriosam quod
-                rerum illo vel doloribus.
-              </p>
-            </section>
-          </article>
         </div>
+
+        <article className={styles.postArticle}>
+          <section>
+            <h2>Proin et varius</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti,
+              nihil doloribus inventore aperiam veniam voluptatibus eligendi
+              necessitatibus porro nobis libero quae non? Obcaecati, eum
+              laboriosam quod rerum illo vel doloribus.
+            </p>
+          </section>
+
+          <section>
+            <h2>Cras laoreet mi</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti,
+              nihil doloribus inventore aperiam veniam voluptatibus eligendi
+              necessitatibus porro nobis libero quae non? Obcaecati, eum
+              laboriosam quod rerum illo vel doloribus. Lorem ipsum dolor sit
+              amet consectetur adipisicing elit. Deleniti, nihil doloribus
+              inventore aperiam veniam voluptatibus eligendi necessitatibus
+              porro nobis libero quae non? Obcaecati, eum laboriosam quod rerum
+              illo vel doloribus. Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Deleniti, nihil doloribus inventore aperiam
+              veniam voluptatibus eligendi necessitatibus porro nobis libero
+              quae non? Obcaecati, eum laboriosam quod rerum illo vel doloribus.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti,
+              nihil doloribus inventore aperiam veniam voluptatibus eligendi
+              necessitatibus porro nobis libero quae non? Obcaecati, eum
+              laboriosam quod rerum illo vel doloribus. Lorem ipsum dolor sit
+              amet consectetur adipisicing elit. Deleniti, nihil doloribus
+              inventore aperiam veniam voluptatibus eligendi necessitatibus
+              porro nobis libero quae non? Obcaecati, eum laboriosam quod rerum
+              illo vel doloribus. Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Deleniti, nihil doloribus inventore aperiam
+              veniam voluptatibus eligendi necessitatibus porro nobis libero
+              quae non? Obcaecati, eum laboriosam quod rerum illo vel doloribus.
+            </p>
+          </section>
+        </article>
       </main>
     </>
   );

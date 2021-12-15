@@ -28,6 +28,8 @@
       list-style-type: none;
 
       li {
+        display:flex;
+        align-items: center;
         margin-right: 1.5rem;
 
         svg{
