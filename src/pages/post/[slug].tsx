@@ -1,9 +1,17 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/no-danger */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { RichText } from 'prismic-dom';
 
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 
+import Prismic from '@prismicio/client';
+import { useRouter } from 'next/router';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
@@ -30,83 +38,121 @@ interface PostProps {
   post: Post;
 }
 
-export default function Post() {
+export default function Post({ post }: PostProps): JSX.Element {
+  const totalWords = post.data.content.reduce((total, contentItem) => {
+    const headingWords = contentItem.heading.split(/\s+/).length;
+    const bodyWords = RichText.asText(contentItem.body).split(/\s/g).length;
+
+    const sum = headingWords + bodyWords;
+    total += sum;
+    return total;
+  }, 0);
+
+  const readTime = Math.ceil(totalWords / 200);
+
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <h1>Carregando...</h1>;
+  }
+
+  const formattedDate = format(
+    new Date(post.first_publication_date),
+    'dd MMM yyyy',
+    {
+      locale: ptBR,
+    }
+  );
+
   return (
     <>
-      <img src="/banner.png" alt="banner" className={styles.postBanner} />
+      <img
+        src={post.data.banner.url}
+        alt="banner"
+        className={styles.postBanner}
+      />
       <main className={commonStyles.container}>
         <div className={styles.postHeader}>
-          <h1>Criando um app CRA do zero</h1>
+          <h1>{post.data.title}</h1>
           <ul>
             <li>
-              <FiCalendar size={15} />
-              <span>15 Mar 2021</span>
+              <FiCalendar />
+              <span>{formattedDate}</span>
             </li>
             <li>
-              <FiUser size={15} />
-              <span>Joseph Oliveira</span>
+              <FiUser />
+              <span>{post.data.author}</span>
             </li>
             <li>
-              <FiClock size={15} />
-              <span>4 min</span>
+              <FiClock />
+              <span>{`${readTime} min`}</span>
             </li>
           </ul>
         </div>
-
-        <article className={styles.postArticle}>
-          <section>
-            <h2>Proin et varius</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti,
-              nihil doloribus inventore aperiam veniam voluptatibus eligendi
-              necessitatibus porro nobis libero quae non? Obcaecati, eum
-              laboriosam quod rerum illo vel doloribus.
-            </p>
-          </section>
-
-          <section>
-            <h2>Cras laoreet mi</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti,
-              nihil doloribus inventore aperiam veniam voluptatibus eligendi
-              necessitatibus porro nobis libero quae non? Obcaecati, eum
-              laboriosam quod rerum illo vel doloribus. Lorem ipsum dolor sit
-              amet consectetur adipisicing elit. Deleniti, nihil doloribus
-              inventore aperiam veniam voluptatibus eligendi necessitatibus
-              porro nobis libero quae non? Obcaecati, eum laboriosam quod rerum
-              illo vel doloribus. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Deleniti, nihil doloribus inventore aperiam
-              veniam voluptatibus eligendi necessitatibus porro nobis libero
-              quae non? Obcaecati, eum laboriosam quod rerum illo vel doloribus.
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti,
-              nihil doloribus inventore aperiam veniam voluptatibus eligendi
-              necessitatibus porro nobis libero quae non? Obcaecati, eum
-              laboriosam quod rerum illo vel doloribus. Lorem ipsum dolor sit
-              amet consectetur adipisicing elit. Deleniti, nihil doloribus
-              inventore aperiam veniam voluptatibus eligendi necessitatibus
-              porro nobis libero quae non? Obcaecati, eum laboriosam quod rerum
-              illo vel doloribus. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Deleniti, nihil doloribus inventore aperiam
-              veniam voluptatibus eligendi necessitatibus porro nobis libero
-              quae non? Obcaecati, eum laboriosam quod rerum illo vel doloribus.
-            </p>
-          </section>
-        </article>
+        {post.data.content.map(content => (
+          <article className={styles.postArticle} key={content.heading}>
+            <section>
+              <h2>{content.heading}</h2>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: RichText.asHtml(content.body),
+                }}
+              />
+            </section>
+          </article>
+        ))}
       </main>
     </>
   );
 }
 
-// export const getStaticPaths = async () => {
-//   const prismic = getPrismicClient();
-//   const posts = await prismic.query(TODO);
+export const getStaticPaths: GetStaticPaths = async () => {
+  const prismic = getPrismicClient();
+  const posts = await prismic.query([
+    Prismic.predicates.at('document.type', 'posts'),
+  ]);
 
-//   // TODO
-// };
+  const paths = posts.results.map(post => {
+    return {
+      params: {
+        slug: post.uid,
+      },
+    };
+  });
 
-// export const getStaticProps = async context => {
-//   const prismic = getPrismicClient();
-//   const response = await prismic.getByUID(TODO);
+  return {
+    paths,
+    fallback: true,
+  };
+};
 
-//   // TODO
-// };
+export const getStaticProps: GetStaticProps = async context => {
+  const { slug } = context.params;
+  const prismic = getPrismicClient();
+  const response = await prismic.getByUID('posts', String(slug), {});
+
+  const post = {
+    uid: response.uid,
+    first_publication_date: response.first_publication_date,
+    data: {
+      title: response.data.title,
+      subtitle: response.data.subtitle,
+      author: response.data.author,
+      banner: {
+        url: response.data.banner.url,
+      },
+      content: response.data.content.map(content => {
+        return {
+          heading: content.heading,
+          body: [...content.body],
+        };
+      }),
+    },
+  };
+
+  return {
+    props: {
+      post,
+    },
+  };
+};
