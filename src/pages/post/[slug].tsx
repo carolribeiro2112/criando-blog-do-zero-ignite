@@ -10,6 +10,7 @@ import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 
 import Prismic from '@prismicio/client';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { getPrismicClient } from '../../services/prismic';
@@ -36,9 +37,10 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  preview: boolean;
 }
 
-export default function Post({ post }: PostProps): JSX.Element {
+export default function Post({ post, preview }: PostProps): JSX.Element {
   const totalWords = post.data.content.reduce((total, contentItem) => {
     const headingWords = contentItem.heading.split(/\s+/).length;
     const bodyWords = RichText.asText(contentItem.body).split(/\s/g).length;
@@ -101,6 +103,14 @@ export default function Post({ post }: PostProps): JSX.Element {
             </section>
           </article>
         ))}
+
+        {preview && (
+          <aside>
+            <Link href="/api/exit-preview">
+              <a className={commonStyles.preview}> Sair do modo Preview</a>
+            </Link>
+          </aside>
+        )}
       </main>
     </>
   );
@@ -126,10 +136,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async context => {
-  const { slug } = context.params;
+export const getStaticProps: GetStaticProps = async ({
+  params,
+  preview = false,
+  previewData,
+}) => {
+  const { slug } = params;
   const prismic = getPrismicClient();
-  const response = await prismic.getByUID('posts', String(slug), {});
+  const response = await prismic.getByUID('posts', String(slug), {
+    ref: previewData?.ref || null,
+  });
 
   const post = {
     uid: response.uid,
@@ -153,6 +169,7 @@ export const getStaticProps: GetStaticProps = async context => {
   return {
     props: {
       post,
+      preview,
     },
   };
 };
